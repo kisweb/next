@@ -1,45 +1,35 @@
-import Head from 'next/head'
+import User from '../../components/user'
 import Link from 'next/link'
 
-export default function Home() {
-  return (
-    <div className="container">
-      <Head>
-        <title>Kisarr</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main>
-        <h1 className="title"> Apprendre NextJs </h1>
+function UserList({users}) {
+    return (
+        <div className="container">
+            <main>
+        <h1 className="title">List of users </h1>
         
-        <p className="description">
-          <Link href="/posts">
-            <a>Posts</a>
+            <h1> </h1>
+            <p className="description">
+          <Link href="/">
+            <a>Home</a>
           </Link> - <Link href="/users">
             <a>Users</a>
           </Link>
-        </p>
-
-        <div className="grid">
-          <a href="https://nextjs.org/docs" className="card">
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-        </div>
-      </main>
-
-      <footer>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel" className="logo" />
-        </a>
-      </footer>
-
-      <style jsx>{`
+        </p>        
+        
+            {
+                users.map(user => {
+                    return (
+                        <div className="grid" key={user.id}>
+                            <div className="card">
+                            <User user = {user}/>                                 
+                            </div>
+                        </div>
+                    )
+                })
+            }
+          
+        </main>
+        <style jsx>{`
         .container {
           min-height: 100vh;
           padding: 0 0.5rem;
@@ -51,7 +41,7 @@ export default function Home() {
 
         main {
           padding: 5rem 0;
-          flex: 1;
+          flex: 2;
           display: flex;
           flex-direction: column;
           justify-content: center;
@@ -184,6 +174,19 @@ export default function Home() {
           box-sizing: border-box;
         }
       `}</style>
-    </div>
-  )
+     </div>
+     );
+  }
+
+export default UserList
+
+export async function getStaticProps(){
+    const response = await fetch("https://jsonplaceholder.typicode.com/users")
+    const data = await response.json()
+    console.log(data)
+    return {
+        props: {
+            users: data,
+        }
+    }
 }
